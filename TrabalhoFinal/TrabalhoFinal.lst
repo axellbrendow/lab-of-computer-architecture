@@ -1,0 +1,450 @@
+MPASM  5.35                 TRABALHOFINAL.ASM   5-24-2019  15:49:23         PAGE  1
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00001 ;#INCLUDE <P16F628A.INC>                ;ARQUIVO PADRÃO MICROCHIP PARA 16F628A
+                      00002 ;;RADIX DEC
+                      00003 ;__CONFIG _CP_OFF & _LVP_OFF & _BOREN_OFF & _MCLRE_ON & _WDT_OFF & _PWRTE_ON & _INTOSC_OSC_NOCLKOUT
+                      00004 ;;__CONFIG H'3F10'
+                      00005 ;
+                      00006 ;; O BOTAO SERÁ CONECTADO NO TERCEIRO BIT DE PORTA
+                      00007 ;#DEFINE BTN PORTA, 2
+                      00008 ;#DEFINE LED_C PORTB, 5 ; LED CONTROLE
+                      00009 ;#DEFINE LED_A4 PORTB, 4 ; LED ANDAR 4
+                      00010 ;#DEFINE LED_A3 PORTB, 3 ; LED ANDAR 3
+                      00011 ;#DEFINE LED_A2 PORTB, 2 ; LED ANDAR 2
+                      00012 ;#DEFINE LED_A1 PORTB, 1 ; LED ANDAR 1
+                      00013 ;#DEFINE LED_T PORTB, 0 ; LED TÉRREO
+                      00014 ;
+                      00015 ;       ; AS VARIÁVEIS ABAIXO SERÃO RESERVADAS A
+                      00016 ;       ; PARTIR DO ENDEREÇO 0X20, QUE É UM ENDEREÇO
+                      00017 ;       ; DO BANCO ZERO DO PIC
+                      00018 ;       CBLOCK  0x20
+                      00019 ;       CONTADOR1
+                      00020 ;       CONTADOR2
+                      00021 ;       CONTADOR3
+                      00022 ;       CONTADOR_DE_DELAYS
+                      00023 ;       ENDC    ;FIM DO BLOCO DE MEMÓRIA
+                      00024 ;       
+                      00025 ;       ; AS INSTRUÇÕES ABAIXO SERÃO COLOCADAS A
+                      00026 ;       ; PARTIR DO ENDEREÇO DE MEMÓRIA 0X00. É
+                      00027 ;       ; IMPORTANTE NOTAR QUE A ARQUITETURA DO PIC
+                      00028 ;       ; É DE HARVARD, OU SEJA, O ENDEREÇO 0X20 DA
+                      00029 ;       ; DIRETIVA CBLOCK SE REFERE A UMA MEMÓRIA
+                      00030 ;       ; DIFERENTE DO ENDEREÇO 0X00 DA DIRETIVA ORG.
+                      00031 ;       ORG     0x00
+                      00032 ;       ; ESTA INSTRUÇÃO FICARÁ NO PRIMEIRO ENDEREÇO
+                      00033 ;       ; DA MEMÓRIA PARA PROGRAMA. CASO QUEIRA
+                      00034 ;       ; VISUALIZAR A MEMÓRIA PARA PROGRAMA DO PIC:
+                      00035 ;       ; (View -> Program Memory -> Symbolic)
+                      00036 ;       GOTO    INICIO
+                      00037 ;
+                      00038 ;       ; LINKS ÚTEIS:
+                      00039 ;       ; https://en.wikipedia.org/wiki/PIC_instruction_listings
+                      00040 ;       ; https://pictutorials.com/The_Status_Register.htm
+                      00041 ;       ; DATASHEET:
+                      00042 ;       ; http://web.mit.edu/6.115/www/document/16f628.pdf
+                      00043 ;
+                      00044 ;INICIO
+                      00045 ;       CLRF    PORTA           ; LIMPA O PORTA
+                      00046 ;       CLRF    PORTB           ; LIMPA O PORTB
+                      00047 ;       ; RP0 = REGISTER PAGE Bit 0
+                      00048 ;       ; RP0 É UM BIT DE SELEÇÃO DE BANCO DE MEMÓRIA
+                      00049 ;       ; RP0 É O SEXTO BIT DO REGISTRADOR STATUS
+                      00050 ;       ; "BSF STATUS, RP0" É IGUAL A "BSF, STATUS, 5"
+                      00051 ;       ; QUE EQUIVALE A COLOCAR O SEXTO BIT DE STATUS
+                      00052 ;       ; COMO 1 (BSF = BIT SET FILE)
+                      00053 ;       ;          B7   B6      B5      B4      B3      B2      B1      B0
+MPASM  5.35                 TRABALHOFINAL.ASM   5-24-2019  15:49:23         PAGE  2
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00054 ;       ; STATUS = IRP  RP1     RP0     TO      PD      Z       DC      C
+                      00055 ;       ; B6 E B5 SERVEM PARA SELECIONAR UM DOS 4
+                      00056 ;       ; BANCOS DE MEMÓRIA.
+                      00057 ;       ; Z = ZERO FLAG
+                      00058 ;       ; DC = DIGIT CARRY
+                      00059 ;       ; C = CARRY
+                      00060 ;       BSF STATUS, RP0
+                      00061 ;       ; AGORA, OS BITS DE SELEÇÃO DO BANCO DE
+                      00062 ;       ; MEMÓRIA FORMAM O NUMERO 01, POIS
+                      00063 ;       ; RP1 = 0 (ESSE É O BIT 6 DO STATUS)
+                      00064 ;       ; RP0 = 1 (BSF LIGOU O BIT RP0 (BIT 5))
+                      00065 ;       ; QUE EQUIVALE A ACESSAR O BANCO DE MEMÓRIA 01
+                      00066 ;
+                      00067 ;       ; CLRF LIMPA O REGISTRADOR TRISB.
+                      00068 ;       ; O REGISTRADOR TRISB ESTÁ NO BANCO 1
+                      00069 ;       CLRF TRISB
+                      00070 ;       CLRF TRISA
+                      00071 ;       BSF TRISA, 2
+                      00072 ;       CLRF INTCON ; TODAS AS INTERRUPÇÕES DESLIGADAS
+                      00073 ;
+                      00074 ;       ; BCF LIMPA O BIT RP0(5) DO REGISTRADOR STATUS,
+                      00075 ;       ; OU SEJA, VOLTAMOS AO BANCO DE MEMÓRIA 00.
+                      00076 ;       BCF STATUS, RP0
+                      00077 ;       MOVLW B'00000111'
+                      00078 ;       MOVWF CMCON ; DESATIVA O COMPARADOR ANALÓGICO
+                      00079 ;
+                      00080 ;CICLO_NORMAL
+                      00081 ;       CALL LIGAR_LED_T
+                      00082 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00083 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00084 ;       CALL DESLIGAR_LED_T
+                      00085 ;
+                      00086 ;       CALL LIGAR_LED_A1
+                      00087 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00088 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00089 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00090 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00091 ;       CALL DESLIGAR_LED_A1
+                      00092 ;
+                      00093 ;       CALL LIGAR_LED_A2
+                      00094 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00095 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00096 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00097 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00098 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00099 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00100 ;       CALL DESLIGAR_LED_A2
+                      00101 ;
+                      00102 ;       CALL LIGAR_LED_A3
+                      00103 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00104 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00105 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00106 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+MPASM  5.35                 TRABALHOFINAL.ASM   5-24-2019  15:49:23         PAGE  3
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00107 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00108 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00109 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00110 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00111 ;       CALL DESLIGAR_LED_A3
+                      00112 ;
+                      00113 ;       CALL LIGAR_LED_A4
+                      00114 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00115 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00116 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00117 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00118 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00119 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00120 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00121 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00122 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00123 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00124 ;       CALL DESLIGAR_LED_A4
+                      00125 ;
+                      00126 ;       CALL LIGAR_LED_A4
+                      00127 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00128 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00129 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00130 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00131 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00132 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00133 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00134 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00135 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00136 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00137 ;       CALL DESLIGAR_LED_A4
+                      00138 ;
+                      00139 ;       CALL LIGAR_LED_A3
+                      00140 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00141 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00142 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00143 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00144 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00145 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00146 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00147 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00148 ;       CALL DESLIGAR_LED_A3
+                      00149 ;
+                      00150 ;       CALL LIGAR_LED_A2
+                      00151 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00152 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00153 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00154 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00155 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00156 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00157 ;       CALL DESLIGAR_LED_A2
+                      00158 ;
+                      00159 ;       CALL LIGAR_LED_A1
+MPASM  5.35                 TRABALHOFINAL.ASM   5-24-2019  15:49:23         PAGE  4
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00160 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00161 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00162 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00163 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00164 ;       CALL DESLIGAR_LED_A1
+                      00165 ;
+                      00166 ;       CALL LIGAR_LED_T
+                      00167 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00168 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00169 ;       CALL DESLIGAR_LED_T
+                      00170 ;
+                      00171 ;GOTO CICLO_NORMAL
+                      00172 ;
+                      00173 ;DELAY_1SEC
+                      00174 ;ATRASO1_HEADER_FOR1 ; header of for1
+                      00175 ;       MOVLW   21                      ; Move literal to accumulator
+                      00176 ;       MOVWF   CONTADOR1       ; Move accumulator value to file
+                      00177 ;       
+                      00178 ;ATRASO1_BODY_FOR1 ; body of for1
+                      00179 ;       
+                      00180 ;       ATRASO1_HEADER_FOR2 ; header of for2
+                      00181 ;               BTFSS   BTN ; Skip next line if BTN = 1
+                      00182 ;               GOTO    CICLO_EMERGENCIA ; Goto if BTN = 1
+                      00183 ;               MOVLW   20                      ; Move literal to accumulator
+                      00184 ;               MOVWF   CONTADOR2       ; Move accumulator value to file
+                      00185 ;
+                      00186 ;       ATRASO1_BODY_FOR2 ; body of for2
+                      00187 ;               NOP
+                      00188 ;               NOP
+                      00189 ;               NOP
+                      00190 ;               NOP
+                      00191 ;               NOP
+                      00192 ;               NOP
+                      00193 ;               NOP
+                      00194 ;               NOP
+                      00195 ;               ATRASO1_HEADER_FOR3 ; header of for3
+                      00196 ;                       MOVLW   255                     ; Move literal to accumulator
+                      00197 ;                       MOVWF   CONTADOR3       ; Move accumulator value to file
+                      00198 ;                       
+                      00199 ;               ATRASO1_BODY_FOR3 ; body of for3
+                      00200 ;                       NOP
+                      00201 ;                       NOP
+                      00202 ;                       NOP
+                      00203 ;                       NOP
+                      00204 ;                       NOP
+                      00205 ;                       NOP
+                      00206 ;                       NOP
+                      00207 ;                       NOP
+                      00208 ;                       DECFSZ  CONTADOR3       ; Decrement file, skip next line if 0
+                      00209 ;                       GOTO    ATRASO1_BODY_FOR3
+                      00210 ;               
+                      00211 ;               DECFSZ  CONTADOR2       ; Decrement file, skip next line if 0
+                      00212 ;               GOTO    ATRASO1_BODY_FOR2
+MPASM  5.35                 TRABALHOFINAL.ASM   5-24-2019  15:49:23         PAGE  5
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00213 ;               
+                      00214 ;       DECFSZ  CONTADOR1       ; Decrement file, skip next line if 0
+                      00215 ;       GOTO    ATRASO1_BODY_FOR1
+                      00216 ;       
+                      00217 ;       BTFSS LED_C ; skip next line if LED_C = 1
+                      00218 ;       GOTO LIGAR_LED_C_ATRASO1
+                      00219 ;       GOTO DESLIGAR_LED_C_ATRASO1
+                      00220 ;MYRETURN_ATRASO1
+                      00221 ;RETURN
+                      00222 ;
+                      00223 ;LIGAR_LED_C_ATRASO1
+                      00224 ;       BSF LED_C
+                      00225 ;       GOTO MYRETURN_ATRASO1
+                      00226 ;
+                      00227 ;DESLIGAR_LED_C_ATRASO1
+                      00228 ;       BCF LED_C
+                      00229 ;       GOTO MYRETURN_ATRASO1
+                      00230 ;
+                      00231 ;LIGAR_LED_A4
+                      00232 ;       BSF LED_A4
+                      00233 ;RETURN
+                      00234 ;
+                      00235 ;DESLIGAR_LED_A4
+                      00236 ;       BCF LED_A4
+                      00237 ;RETURN
+                      00238 ;
+                      00239 ;LIGAR_LED_A3
+                      00240 ;       BSF LED_A3
+                      00241 ;RETURN
+                      00242 ;
+                      00243 ;DESLIGAR_LED_A3
+                      00244 ;       BCF LED_A3
+                      00245 ;RETURN
+                      00246 ;
+                      00247 ;LIGAR_LED_A2
+                      00248 ;       BSF LED_A2
+                      00249 ;RETURN
+                      00250 ;
+                      00251 ;DESLIGAR_LED_A2
+                      00252 ;       BCF LED_A2
+                      00253 ;RETURN
+                      00254 ;
+                      00255 ;LIGAR_LED_A1
+                      00256 ;       BSF LED_A1
+                      00257 ;RETURN
+                      00258 ;
+                      00259 ;DESLIGAR_LED_A1
+                      00260 ;       BCF LED_A1
+                      00261 ;RETURN
+                      00262 ;
+                      00263 ;LIGAR_LED_T
+                      00264 ;       BSF LED_T
+                      00265 ;RETURN
+MPASM  5.35                 TRABALHOFINAL.ASM   5-24-2019  15:49:23         PAGE  6
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00266 ;
+                      00267 ;DESLIGAR_LED_T
+                      00268 ;       BCF LED_T
+                      00269 ;RETURN
+                      00270 ;
+                      00271 ;
+                      00272 ;DELAY_1SEC_NO_TRIGGER
+                      00273 ;ATRASO2_HEADER_FOR1 ; header of for1
+                      00274 ;       MOVLW   21                      ; Move literal to accumulator
+                      00275 ;       MOVWF   CONTADOR1       ; Move accumulator value to file
+                      00276 ;       
+                      00277 ;ATRASO2_BODY_FOR1 ; body of for1
+                      00278 ;       
+                      00279 ;       ATRASO2_HEADER_FOR2 ; header of for2
+                      00280 ;               MOVLW   20                      ; Move literal to accumulator
+                      00281 ;               MOVWF   CONTADOR2       ; Move accumulator value to file
+                      00282 ;
+                      00283 ;       ATRASO2_BODY_FOR2 ; body of for2
+                      00284 ;               NOP
+                      00285 ;               NOP
+                      00286 ;               NOP
+                      00287 ;               NOP
+                      00288 ;               NOP
+                      00289 ;               NOP
+                      00290 ;               NOP
+                      00291 ;               NOP
+                      00292 ;               ATRASO2_HEADER_FOR3 ; header of for3
+                      00293 ;                       MOVLW   255                     ; Move literal to accumulator
+                      00294 ;                       MOVWF   CONTADOR3       ; Move accumulator value to file
+                      00295 ;                       
+                      00296 ;               ATRASO2_BODY_FOR3 ; body of for3
+                      00297 ;                       NOP
+                      00298 ;                       NOP
+                      00299 ;                       NOP
+                      00300 ;                       NOP
+                      00301 ;                       NOP
+                      00302 ;                       NOP
+                      00303 ;                       NOP
+                      00304 ;                       NOP
+                      00305 ;                       DECFSZ  CONTADOR3       ; Decrement file, skip next line if 0
+                      00306 ;                       GOTO    ATRASO2_BODY_FOR3
+                      00307 ;               
+                      00308 ;               DECFSZ  CONTADOR2       ; Decrement file, skip next line if 0
+                      00309 ;               GOTO    ATRASO2_BODY_FOR2
+                      00310 ;               
+                      00311 ;       DECFSZ  CONTADOR1       ; Decrement file, skip next line if 0
+                      00312 ;       GOTO    ATRASO2_BODY_FOR1
+                      00313 ;       
+                      00314 ;       BTFSS LED_C ; skip next line if LED_C = 1
+                      00315 ;       GOTO LIGAR_LED_C_ATRASO2
+                      00316 ;       GOTO DESLIGAR_LED_C_ATRASO2
+                      00317 ;MYRETURN_ATRASO2
+                      00318 ;RETURN
+MPASM  5.35                 TRABALHOFINAL.ASM   5-24-2019  15:49:23         PAGE  7
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00319 ;
+                      00320 ;LIGAR_LED_C_ATRASO2
+                      00321 ;       BSF LED_C
+                      00322 ;       GOTO MYRETURN_ATRASO2
+                      00323 ;
+                      00324 ;DESLIGAR_LED_C_ATRASO2
+                      00325 ;       BCF LED_C
+                      00326 ;       GOTO MYRETURN_ATRASO2
+                      00327 ;
+                      00328 ;CICLO_EMERGENCIA
+                      00329 ;       BTFSC LED_A4 ; skip next line if LED_A4 = 0
+                      00330 ;       CALL CICLO_EMERGENCIA_A4
+                      00331 ;       
+                      00332 ;       BTFSC LED_A3 ; skip next line if LED_A3 = 0
+                      00333 ;       CALL CICLO_EMERGENCIA_A3
+                      00334 ;       
+                      00335 ;       BTFSC LED_A2 ; skip next line if LED_A2 = 0
+                      00336 ;       CALL CICLO_EMERGENCIA_A2
+                      00337 ;       
+                      00338 ;       BTFSC LED_A1 ; skip next line if LED_A1 = 0
+                      00339 ;       CALL CICLO_EMERGENCIA_A1
+                      00340 ;       
+                      00341 ;       BTFSC LED_T ; skip next line if LED_T = 0
+                      00342 ;       CALL CICLO_EMERGENCIA_T
+                      00343 ;       
+                      00344 ;GOTO CICLO_NORMAL
+                      00345 ;
+                      00346 ;CICLO_EMERGENCIA_A4
+                      00347 ;       CALL DELAY_1SEC_NO_TRIGGER
+                      00348 ;       CALL DELAY_1SEC_NO_TRIGGER
+                      00349 ;       CALL DESLIGAR_LED_A4
+                      00350 ;       CALL LIGAR_LED_A3
+                      00351 ;RETURN
+                      00352 ;     
+                      00353 ;CICLO_EMERGENCIA_A3
+                      00354 ;       CALL DELAY_1SEC_NO_TRIGGER
+                      00355 ;       CALL DELAY_1SEC_NO_TRIGGER
+                      00356 ;       CALL DESLIGAR_LED_A3
+                      00357 ;       CALL LIGAR_LED_A2
+                      00358 ;RETURN
+                      00359 ;     
+                      00360 ;CICLO_EMERGENCIA_A2
+                      00361 ;       CALL DELAY_1SEC_NO_TRIGGER
+                      00362 ;       CALL DELAY_1SEC_NO_TRIGGER
+                      00363 ;       CALL DESLIGAR_LED_A2
+                      00364 ;       CALL LIGAR_LED_A1
+                      00365 ;RETURN
+                      00366 ;     
+                      00367 ;CICLO_EMERGENCIA_A1
+                      00368 ;       CALL DELAY_1SEC_NO_TRIGGER
+                      00369 ;       CALL DELAY_1SEC_NO_TRIGGER
+                      00370 ;       CALL DESLIGAR_LED_A1
+                      00371 ;       CALL LIGAR_LED_T
+MPASM  5.35                 TRABALHOFINAL.ASM   5-24-2019  15:49:23         PAGE  8
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00372 ;RETURN
+                      00373 ;     
+                      00374 ;CICLO_EMERGENCIA_T
+                      00375 ;       CALL DELAY_1SEC_NO_TRIGGER
+                      00376 ;       CALL DELAY_1SEC_NO_TRIGGER
+                      00377 ;       CALL DELAY_1SEC_NO_TRIGGER
+                      00378 ;       CALL DELAY_1SEC_NO_TRIGGER
+                      00379 ;       CALL DELAY_1SEC_NO_TRIGGER
+                      00380 ;       CALL DELAY_1SEC_NO_TRIGGER
+                      00381 ;       CALL DELAY_1SEC_NO_TRIGGER
+                      00382 ;       CALL DELAY_1SEC_NO_TRIGGER
+                      00383 ;       CALL DELAY_1SEC_NO_TRIGGER
+                      00384 ;       CALL DELAY_1SEC_NO_TRIGGER
+                      00385 ;RETURN
+                      00386 ;       
+Warning[205]: Found directive in column 1. (END)
+                      00387 END
+MPASM  5.35                 TRABALHOFINAL.ASM   5-24-2019  15:49:23         PAGE  9
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+__16F628A                         00000001
+__DEBUG                           1
+
+Errors   :     0
+Warnings :     1 reported,     0 suppressed
+Messages :     0 reported,     0 suppressed
+
+

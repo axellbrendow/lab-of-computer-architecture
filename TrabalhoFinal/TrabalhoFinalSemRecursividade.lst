@@ -1,0 +1,967 @@
+MPASM  5.35  TRABALHOFINALSEMRECURSIVIDADE.AS   5-24-2019  15:49:23         PAGE  1
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00001 #INCLUDE <P16F628A.INC>         ;ARQUIVO PADRÃO MICROCHIP PARA 16F628A
+                      00001         LIST
+                      00002 ; P16F628A.INC  Standard Header File, Version 1.10    Microchip Technology, Inc.
+                      00265         LIST
+                      00266 
+                      00002 ;RADIX DEC
+                      00003 ;__CONFIG _CP_OFF & _LVP_OFF & _BOREN_OFF & _MCLRE_ON & _WDT_OFF & _PWRTE_ON & _INTOSC_OSC_NOCLKOUT
+Warning[205]: Found directive in column 1. (__CONFIG)
+2007   3F10           00004 __CONFIG H'3F10'
+                      00005 
+                      00006 ; O BOTAO SERÁ CONECTADO NO TERCEIRO BIT DE PORTA
+                      00007 #DEFINE BTN PORTA, 2
+                      00008 #DEFINE LED_C PORTB, 5 ; LED CONTROLE
+                      00009 #DEFINE LED_A4 PORTB, 4 ; LED ANDAR 4
+                      00010 #DEFINE LED_A3 PORTB, 3 ; LED ANDAR 3
+                      00011 #DEFINE LED_A2 PORTB, 2 ; LED ANDAR 2
+                      00012 #DEFINE LED_A1 PORTB, 1 ; LED ANDAR 1
+                      00013 #DEFINE LED_T PORTB, 0 ; LED TÉRREO
+                      00014 #DEFINE BIT_STATUS_MOVIMENTO STATUS_MOVIMENTO, 0 ; bit 0 do status
+                      00015 
+                      00016         ; AS VARIÁVEIS ABAIXO SERÃO RESERVADAS A
+                      00017         ; PARTIR DO ENDEREÇO 0X20, QUE É UM ENDEREÇO
+                      00018         ; DO BANCO ZERO DO PIC
+                      00019         CBLOCK  0x20
+  00000020            00020         CONTADOR1
+  00000021            00021         CONTADOR2
+  00000022            00022         CONTADOR3
+  00000023            00023         CONTADOR_DE_DELAYS
+  00000024            00024         STATUS_MOVIMENTO
+                      00025         ENDC    ;FIM DO BLOCO DE MEMÓRIA
+                      00026         
+                      00027         ; AS INSTRUÇÕES ABAIXO SERÃO COLOCADAS A
+                      00028         ; PARTIR DO ENDEREÇO DE MEMÓRIA 0X00. É
+                      00029         ; IMPORTANTE NOTAR QUE A ARQUITETURA DO PIC
+                      00030         ; É DE HARVARD, OU SEJA, O ENDEREÇO 0X20 DA
+                      00031         ; DIRETIVA CBLOCK SE REFERE A UMA MEMÓRIA
+                      00032         ; DIFERENTE DO ENDEREÇO 0X00 DA DIRETIVA ORG.
+                      00033         ORG     0x00
+                      00034         ; ESTA INSTRUÇÃO FICARÁ NO PRIMEIRO ENDEREÇO
+                      00035         ; DA MEMÓRIA PARA PROGRAMA. CASO QUEIRA
+                      00036         ; VISUALIZAR A MEMÓRIA PARA PROGRAMA DO PIC:
+                      00037         ; (View -> Program Memory -> Symbolic)
+0000   2???           00038         GOTO    INICIO
+                      00039 
+                      00040         ; LINKS ÚTEIS:
+                      00041         ; https://en.wikipedia.org/wiki/PIC_instruction_listings
+                      00042         ; https://pictutorials.com/The_Status_Register.htm
+                      00043         ; DATASHEET:
+                      00044         ; http://web.mit.edu/6.115/www/document/16f628.pdf
+                      00045 
+0001                  00046 INICIO
+0001   0185           00047         CLRF    PORTA           ; LIMPA O PORTA
+0002   0186           00048         CLRF    PORTB           ; LIMPA O PORTB
+MPASM  5.35  TRABALHOFINALSEMRECURSIVIDADE.AS   5-24-2019  15:49:23         PAGE  2
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00049         ; RP0 = REGISTER PAGE Bit 0
+                      00050         ; RP0 É UM BIT DE SELEÇÃO DE BANCO DE MEMÓRIA
+                      00051         ; RP0 É O SEXTO BIT DO REGISTRADOR STATUS
+                      00052         ; "BSF STATUS, RP0" É IGUAL A "BSF, STATUS, 5"
+                      00053         ; QUE EQUIVALE A COLOCAR O SEXTO BIT DE STATUS
+                      00054         ; COMO 1 (BSF = BIT SET FILE)
+                      00055         ;          B7   B6      B5      B4      B3      B2      B1      B0
+                      00056         ; STATUS = IRP  RP1     RP0     TO      PD      Z       DC      C
+                      00057         ; B6 E B5 SERVEM PARA SELECIONAR UM DOS 4
+                      00058         ; BANCOS DE MEMÓRIA.
+                      00059         ; Z = ZERO FLAG
+                      00060         ; DC = DIGIT CARRY
+                      00061         ; C = CARRY
+0003   1683           00062         BSF STATUS, RP0
+                      00063         ; AGORA, OS BITS DE SELEÇÃO DO BANCO DE
+                      00064         ; MEMÓRIA FORMAM O NUMERO 01, POIS
+                      00065         ; RP1 = 0 (ESSE É O BIT 6 DO STATUS)
+                      00066         ; RP0 = 1 (BSF LIGOU O BIT RP0 (BIT 5))
+                      00067         ; QUE EQUIVALE A ACESSAR O BANCO DE MEMÓRIA 01
+                      00068 
+                      00069         ; CLRF LIMPA O REGISTRADOR TRISB.
+                      00070         ; O REGISTRADOR TRISB ESTÁ NO BANCO 1
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0004   0186           00071         CLRF TRISB
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0005   0185           00072         CLRF TRISA
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0006   1505           00073         BSF TRISA, 2
+0007   018B           00074         CLRF INTCON ; TODAS AS INTERRUPÇÕES DESLIGADAS
+                      00075 
+                      00076         ; BCF LIMPA O BIT RP0(5) DO REGISTRADOR STATUS,
+                      00077         ; OU SEJA, VOLTAMOS AO BANCO DE MEMÓRIA 00.
+0008   1283           00078         BCF STATUS, RP0
+                      00079 
+0009   3007           00080         MOVLW B'00000111'
+000A   009F           00081         MOVWF CMCON ; DESATIVA O COMPARADOR ANALÓGICO
+                      00082         
+000B   01A3           00083         CLRF CONTADOR_DE_DELAYS ; Atribui zero
+000C   01A4           00084         CLRF STATUS_MOVIMENTO ; Atribui zero
+                      00085         
+                      00086 
+                      00087 ;CICLO_NORMAL
+                      00088 ;
+                      00089 ;       CALL LIGAR_LED_T
+                      00090 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00091 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00092 ;       CALL DESLIGAR_LED_T
+                      00093 ;
+                      00094 ;       CALL LIGAR_LED_A1
+                      00095 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00096 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00097 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00098 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+MPASM  5.35  TRABALHOFINALSEMRECURSIVIDADE.AS   5-24-2019  15:49:23         PAGE  3
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00099 ;       CALL DESLIGAR_LED_A1
+                      00100 ;
+                      00101 ;       CALL LIGAR_LED_A2
+                      00102 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00103 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00104 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00105 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00106 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00107 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00108 ;       CALL DESLIGAR_LED_A2
+                      00109 ;
+                      00110 ;       CALL LIGAR_LED_A3
+                      00111 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00112 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00113 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00114 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00115 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00116 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00117 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00118 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00119 ;       CALL DESLIGAR_LED_A3
+                      00120 ;
+                      00121 ;       CALL LIGAR_LED_A4
+                      00122 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00123 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00124 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00125 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00126 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00127 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00128 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00129 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00130 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00131 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00132 ;       CALL DESLIGAR_LED_A4
+                      00133 ;
+                      00134 ;       CALL LIGAR_LED_A4
+                      00135 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00136 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00137 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00138 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00139 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00140 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00141 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00142 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00143 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00144 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00145 ;       CALL DESLIGAR_LED_A4
+                      00146 ;
+                      00147 ;       CALL LIGAR_LED_A3
+                      00148 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00149 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00150 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00151 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+MPASM  5.35  TRABALHOFINALSEMRECURSIVIDADE.AS   5-24-2019  15:49:23         PAGE  4
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00152 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00153 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00154 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00155 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00156 ;       CALL DESLIGAR_LED_A3
+                      00157 ;
+                      00158 ;       CALL LIGAR_LED_A2
+                      00159 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00160 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00161 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00162 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00163 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00164 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00165 ;       CALL DESLIGAR_LED_A2
+                      00166 ;
+                      00167 ;       CALL LIGAR_LED_A1
+                      00168 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00169 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00170 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00171 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00172 ;       CALL DESLIGAR_LED_A1
+                      00173 ;
+                      00174 ;       CALL LIGAR_LED_T
+                      00175 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00176 ;       CALL DELAY_1SEC ; 1 second delay with event trigger
+                      00177 ;       CALL DESLIGAR_LED_T
+                      00178 ;
+                      00179 ;GOTO CICLO_NORMAL
+                      00180 
+000D                  00181 LOOP_MOVIMENTO_NORMAL
+                      00182         ; skip if bit = 1. -> (up = 0, down = 1)
+000D   1C24           00183         BTFSS BIT_STATUS_MOVIMENTO
+000E   2???           00184         GOTO LOOP_SUBIDA
+000F   2???           00185         GOTO LOOP_DESCIDA
+Warning[203]: Found opcode in column 1. (GOTO)
+0010   2???           00186 GOTO LOOP_MOVIMENTO_NORMAL
+                      00187 
+                      00188 ; ------------------ SUBIDA
+                      00189 
+0011                  00190 LOOP_SUBIDA
+0011   1A06           00191         BTFSC LED_A4 ; skip next line if LED_A4 = 0
+0012   2???           00192         GOTO CICLO_NORMAL_A4
+                      00193         
+0013   1986           00194         BTFSC LED_A3 ; skip next line if LED_A3 = 0
+0014   2???           00195         GOTO CICLO_NORMAL_A3
+                      00196         
+0015   1906           00197         BTFSC LED_A2 ; skip next line if LED_A2 = 0
+0016   2???           00198         GOTO CICLO_NORMAL_A2
+                      00199         
+0017   1886           00200         BTFSC LED_A1 ; skip next line if LED_A1 = 0
+0018   2???           00201         GOTO CICLO_NORMAL_A1
+                      00202         
+0019   1806           00203         BTFSC LED_T ; skip next line if LED_T = 0
+MPASM  5.35  TRABALHOFINALSEMRECURSIVIDADE.AS   5-24-2019  15:49:23         PAGE  5
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+001A   2???           00204         GOTO CICLO_NORMAL_T
+                      00205 
+001B   2???           00206         CALL LOOP_SUBIDA_LEDS
+Warning[203]: Found opcode in column 1. (GOTO)
+001C   2???           00207 GOTO LOOP_MOVIMENTO_NORMAL
+                      00208 
+001D                  00209 LOOP_SUBIDA_LEDS
+001D   1A06           00210         BTFSC LED_A4 ; skip next line if LED_A4 = 0
+001E   2???           00211         CALL LIGAR_LED_T_SUBIDA
+                      00212         
+001F   1986           00213         BTFSC LED_A3 ; skip next line if LED_A3 = 0
+0020   2???           00214         CALL LIGAR_LED_A4_SUBIDA
+                      00215         
+0021   1906           00216         BTFSC LED_A2 ; skip next line if LED_A2 = 0
+0022   2???           00217         CALL LIGAR_LED_A3_SUBIDA
+                      00218         
+0023   1886           00219         BTFSC LED_A1 ; skip next line if LED_A1 = 0
+0024   2???           00220         CALL LIGAR_LED_A2_SUBIDA
+                      00221         
+0025   1806           00222         BTFSC LED_T ; skip next line if LED_T = 0
+0026   2???           00223         CALL LIGAR_LED_A1_SUBIDA
+Warning[203]: Found opcode in column 1. (RETURN)
+0027   0008           00224 RETURN
+                      00225 
+                      00226 ; ----------------- DESCIDA
+                      00227 
+0028                  00228 LOOP_DESCIDA
+0028   1A06           00229         BTFSC LED_A4 ; skip next line if LED_A4 = 0
+0029   2???           00230         GOTO CICLO_NORMAL_A4
+                      00231         
+002A   1986           00232         BTFSC LED_A3 ; skip next line if LED_A3 = 0
+002B   2???           00233         GOTO CICLO_NORMAL_A3
+                      00234         
+002C   1906           00235         BTFSC LED_A2 ; skip next line if LED_A2 = 0
+002D   2???           00236         GOTO CICLO_NORMAL_A2
+                      00237         
+002E   1886           00238         BTFSC LED_A1 ; skip next line if LED_A1 = 0
+002F   2???           00239         GOTO CICLO_NORMAL_A1
+                      00240         
+0030   1806           00241         BTFSC LED_T ; skip next line if LED_T = 0
+0031   2???           00242         GOTO CICLO_NORMAL_T
+                      00243         
+0032   2???           00244         CALL LOOP_DESCIDA_LEDS
+Warning[203]: Found opcode in column 1. (GOTO)
+0033   2???           00245 GOTO LOOP_MOVIMENTO_NORMAL
+                      00246 
+0034                  00247 LOOP_DESCIDA_LEDS
+0034   1A06           00248         BTFSC LED_A4 ; skip next line if LED_A4 = 0
+0035   2???           00249         CALL LIGAR_LED_A3_DESCIDA
+                      00250         
+0036   1986           00251         BTFSC LED_A3 ; skip next line if LED_A3 = 0
+0037   2???           00252         CALL LIGAR_LED_A2_DESCIDA
+                      00253         
+MPASM  5.35  TRABALHOFINALSEMRECURSIVIDADE.AS   5-24-2019  15:49:23         PAGE  6
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0038   1906           00254         BTFSC LED_A2 ; skip next line if LED_A2 = 0
+0039   2???           00255         CALL LIGAR_LED_A1_DESCIDA
+                      00256         
+003A   1886           00257         BTFSC LED_A1 ; skip next line if LED_A1 = 0
+003B   2???           00258         CALL LIGAR_LED_T_DESCIDA
+                      00259         
+003C   1806           00260         BTFSC LED_T ; skip next line if LED_T = 0
+003D   2???           00261         CALL LIGAR_LED_A4_DESCIDA
+Warning[203]: Found opcode in column 1. (RETURN)
+003E   0008           00262 RETURN
+                      00263 
+                      00264 ; ---------------- CICLO DE DELAYS PARA CADA ANDAR
+                      00265 
+003F                  00266 CICLO_NORMAL_A4
+003F   300A           00267         MOVLW 0x0A
+0040   00A3           00268         MOVWF CONTADOR_DE_DELAYS
+0041   2???           00269         GOTO DELAY_WITH_TRIGGER
+                      00270     
+0042                  00271 CICLO_NORMAL_A3
+0042   3008           00272         MOVLW 0x08
+0043   00A3           00273         MOVWF CONTADOR_DE_DELAYS
+0044   2???           00274         GOTO DELAY_WITH_TRIGGER
+                      00275     
+0045                  00276 CICLO_NORMAL_A2
+0045   3006           00277         MOVLW 0x06
+0046   00A3           00278         MOVWF CONTADOR_DE_DELAYS
+0047   2???           00279         GOTO DELAY_WITH_TRIGGER
+                      00280     
+0048                  00281 CICLO_NORMAL_A1
+0048   3004           00282         MOVLW 0x04
+0049   00A3           00283         MOVWF CONTADOR_DE_DELAYS
+004A   2???           00284         GOTO DELAY_WITH_TRIGGER
+                      00285     
+004B                  00286 CICLO_NORMAL_T
+004B   3002           00287         MOVLW 0x02
+004C   00A3           00288         MOVWF CONTADOR_DE_DELAYS
+004D   2???           00289         GOTO DELAY_WITH_TRIGGER
+                      00290 
+                      00291 ; --------------------- DELAY COM GATILHO DE EVENTO
+                      00292 
+004E                  00293 DELAY_WITH_TRIGGER
+004E                  00294 ATRASO1_HEADER_FOR1 ; header of for1
+004E   3021           00295         MOVLW   21                      ; Move literal to accumulator
+004F   00A0           00296         MOVWF   CONTADOR1       ; Move accumulator value to file
+                      00297         
+0050                  00298 ATRASO1_BODY_FOR1 ; body of for1
+                      00299         
+Warning[207]: Found label after column 1. (ATRASO1_HEADER_FOR2)
+0050                  00300         ATRASO1_HEADER_FOR2 ; header of for2
+0050   1D05           00301                 BTFSS   BTN ; Skip next line if BTN = 1
+0051   2???           00302                 GOTO    CICLO_EMERGENCIA ; Goto if BTN = 1
+0052   3020           00303                 MOVLW   20                      ; Move literal to accumulator
+0053   00A1           00304                 MOVWF   CONTADOR2       ; Move accumulator value to file
+MPASM  5.35  TRABALHOFINALSEMRECURSIVIDADE.AS   5-24-2019  15:49:23         PAGE  7
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00305 
+Warning[207]: Found label after column 1. (ATRASO1_BODY_FOR2)
+0054                  00306         ATRASO1_BODY_FOR2 ; body of for2
+0054   0000           00307                 NOP
+0055   0000           00308                 NOP
+0056   0000           00309                 NOP
+0057   0000           00310                 NOP
+0058   0000           00311                 NOP
+0059   0000           00312                 NOP
+005A   0000           00313                 NOP
+005B   0000           00314                 NOP
+Warning[207]: Found label after column 1. (ATRASO1_HEADER_FOR3)
+005C                  00315                 ATRASO1_HEADER_FOR3 ; header of for3
+Warning[202]: Argument out of range.  Least significant bits used.
+005C   3055           00316                         MOVLW   255                     ; Move literal to accumulator
+005D   00A2           00317                         MOVWF   CONTADOR3       ; Move accumulator value to file
+                      00318                         
+Warning[207]: Found label after column 1. (ATRASO1_BODY_FOR3)
+005E                  00319                 ATRASO1_BODY_FOR3 ; body of for3
+005E   0000           00320                         NOP
+005F   0000           00321                         NOP
+0060   0000           00322                         NOP
+0061   0000           00323                         NOP
+0062   0000           00324                         NOP
+0063   0000           00325                         NOP
+0064   0000           00326                         NOP
+0065   0000           00327                         NOP
+Message[305]: Using default destination of 1 (file).
+0066   0BA2           00328                         DECFSZ  CONTADOR3       ; Decrement file, skip next line if 0
+0067   2???           00329                         GOTO    ATRASO1_BODY_FOR3
+                      00330                 
+Message[305]: Using default destination of 1 (file).
+0068   0BA1           00331                 DECFSZ  CONTADOR2       ; Decrement file, skip next line if 0
+0069   2???           00332                 GOTO    ATRASO1_BODY_FOR2
+                      00333                 
+Message[305]: Using default destination of 1 (file).
+006A   0BA0           00334         DECFSZ  CONTADOR1       ; Decrement file, skip next line if 0
+006B   2???           00335         GOTO    ATRASO1_BODY_FOR1
+                      00336         
+006C   1E86           00337         BTFSS LED_C ; skip next line if LED_C = 1
+006D   2???           00338         GOTO LIGAR_LED_C_ATRASO1
+006E   2???           00339         GOTO DESLIGAR_LED_C_ATRASO1
+                      00340 
+006F                  00341 MYRETURN_ATRASO1
+Message[305]: Using default destination of 1 (file).
+006F   0BA3           00342         DECFSZ CONTADOR_DE_DELAYS ; skip next if 0
+0070   2???           00343         GOTO DELAY_WITH_TRIGGER ; faz a mesma coisa de novo
+Warning[203]: Found opcode in column 1. (GOTO)
+0071   2???           00344 GOTO LOOP_MOVIMENTO_NORMAL ; vai para o "menu" dos loopings
+                      00345 
+0072                  00346 LIGAR_LED_C_ATRASO1
+0072   1686           00347         BSF LED_C
+0073   2???           00348         GOTO MYRETURN_ATRASO1
+MPASM  5.35  TRABALHOFINALSEMRECURSIVIDADE.AS   5-24-2019  15:49:23         PAGE  8
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00349 
+0074                  00350 DESLIGAR_LED_C_ATRASO1
+0074   1286           00351         BCF LED_C
+0075   2???           00352         GOTO MYRETURN_ATRASO1
+                      00353 
+                      00354 ; -------------- LEDS
+                      00355 
+0076                  00356 LIGAR_LED_A4
+0076   1606           00357         BSF LED_A4
+Warning[203]: Found opcode in column 1. (RETURN)
+0077   0008           00358 RETURN
+                      00359 
+0078                  00360 DESLIGAR_LED_A4
+0078   1206           00361         BCF LED_A4
+Warning[203]: Found opcode in column 1. (RETURN)
+0079   0008           00362 RETURN
+                      00363 
+007A                  00364 LIGAR_LED_A3
+007A   1586           00365         BSF LED_A3
+Warning[203]: Found opcode in column 1. (RETURN)
+007B   0008           00366 RETURN
+                      00367 
+007C                  00368 DESLIGAR_LED_A3
+007C   1186           00369         BCF LED_A3
+Warning[203]: Found opcode in column 1. (RETURN)
+007D   0008           00370 RETURN
+                      00371 
+007E                  00372 LIGAR_LED_A2
+007E   1506           00373         BSF LED_A2
+Warning[203]: Found opcode in column 1. (RETURN)
+007F   0008           00374 RETURN
+                      00375 
+0080                  00376 DESLIGAR_LED_A2
+0080   1106           00377         BCF LED_A2
+Warning[203]: Found opcode in column 1. (RETURN)
+0081   0008           00378 RETURN
+                      00379 
+0082                  00380 LIGAR_LED_A1
+0082   1486           00381         BSF LED_A1
+Warning[203]: Found opcode in column 1. (RETURN)
+0083   0008           00382 RETURN
+                      00383 
+0084                  00384 DESLIGAR_LED_A1
+0084   1086           00385         BCF LED_A1
+Warning[203]: Found opcode in column 1. (RETURN)
+0085   0008           00386 RETURN
+                      00387 
+0086                  00388 LIGAR_LED_T
+0086   1406           00389         BSF LED_T
+Warning[203]: Found opcode in column 1. (RETURN)
+0087   0008           00390 RETURN
+                      00391 
+0088                  00392 DESLIGAR_LED_T
+MPASM  5.35  TRABALHOFINALSEMRECURSIVIDADE.AS   5-24-2019  15:49:23         PAGE  9
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0088   1006           00393         BCF LED_T
+Warning[203]: Found opcode in column 1. (RETURN)
+0089   0008           00394 RETURN
+                      00395 
+                      00396 ; -------------- LEDS SUBIDA
+                      00397 
+008A                  00398 LIGAR_LED_A4_SUBIDA
+008A   2???           00399         CALL DESLIGAR_LED_A3
+008B   2???           00400         CALL LIGAR_LED_A4
+Warning[203]: Found opcode in column 1. (RETURN)
+008C   0008           00401 RETURN
+                      00402 
+008D                  00403 LIGAR_LED_A3_SUBIDA
+008D   2???           00404         CALL DESLIGAR_LED_A2
+008E   2???           00405         CALL LIGAR_LED_A3
+Warning[203]: Found opcode in column 1. (RETURN)
+008F   0008           00406 RETURN
+                      00407 
+0090                  00408 LIGAR_LED_A2_SUBIDA
+0090   2???           00409         CALL DESLIGAR_LED_A1
+0091   2???           00410         CALL LIGAR_LED_A2
+Warning[203]: Found opcode in column 1. (RETURN)
+0092   0008           00411 RETURN
+                      00412 
+0093                  00413 LIGAR_LED_A1_SUBIDA
+0093   2???           00414         CALL DESLIGAR_LED_T
+0094   2???           00415         CALL LIGAR_LED_A1
+Warning[203]: Found opcode in column 1. (RETURN)
+0095   0008           00416 RETURN
+                      00417 
+0096                  00418 LIGAR_LED_T_SUBIDA
+0096   2???           00419         CALL DESLIGAR_LED_A4
+0097   2???           00420         CALL LIGAR_LED_T
+Warning[203]: Found opcode in column 1. (RETURN)
+0098   0008           00421 RETURN
+                      00422 
+                      00423 ; -------------- LEDS DESCIDA
+                      00424 
+0099                  00425 LIGAR_LED_A4_DESCIDA
+0099   2???           00426         CALL DESLIGAR_LED_T
+009A   2???           00427         CALL LIGAR_LED_A4
+Warning[203]: Found opcode in column 1. (RETURN)
+009B   0008           00428 RETURN
+                      00429 
+009C                  00430 LIGAR_LED_A3_DESCIDA
+009C   2???           00431         CALL DESLIGAR_LED_A4
+009D   2???           00432         CALL LIGAR_LED_A3
+Warning[203]: Found opcode in column 1. (RETURN)
+009E   0008           00433 RETURN
+                      00434 
+009F                  00435 LIGAR_LED_A2_DESCIDA
+009F   2???           00436         CALL DESLIGAR_LED_A3
+00A0   2???           00437         CALL LIGAR_LED_A2
+MPASM  5.35  TRABALHOFINALSEMRECURSIVIDADE.AS   5-24-2019  15:49:23         PAGE 10
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+Warning[203]: Found opcode in column 1. (RETURN)
+00A1   0008           00438 RETURN
+                      00439 
+00A2                  00440 LIGAR_LED_A1_DESCIDA
+00A2   2???           00441         CALL DESLIGAR_LED_A2
+00A3   2???           00442         CALL LIGAR_LED_A1
+Warning[203]: Found opcode in column 1. (RETURN)
+00A4   0008           00443 RETURN
+                      00444 
+00A5                  00445 LIGAR_LED_T_DESCIDA
+00A5   2???           00446         CALL DESLIGAR_LED_A1
+00A6   2???           00447         CALL LIGAR_LED_T
+Warning[203]: Found opcode in column 1. (RETURN)
+00A7   0008           00448 RETURN
+                      00449 
+                      00450 ; --------------------- DELAY SEM GATILHO DE EVENTO
+                      00451 
+00A8                  00452 DELAY_1SEC_NO_TRIGGER
+00A8                  00453 ATRASO2_HEADER_FOR1 ; header of for1
+00A8   3021           00454         MOVLW   21                      ; Move literal to accumulator
+00A9   00A0           00455         MOVWF   CONTADOR1       ; Move accumulator value to file
+                      00456         
+00AA                  00457 ATRASO2_BODY_FOR1 ; body of for1
+                      00458         
+Warning[207]: Found label after column 1. (ATRASO2_HEADER_FOR2)
+00AA                  00459         ATRASO2_HEADER_FOR2 ; header of for2
+00AA   3020           00460                 MOVLW   20                      ; Move literal to accumulator
+00AB   00A1           00461                 MOVWF   CONTADOR2       ; Move accumulator value to file
+                      00462 
+Warning[207]: Found label after column 1. (ATRASO2_BODY_FOR2)
+00AC                  00463         ATRASO2_BODY_FOR2 ; body of for2
+00AC   0000           00464                 NOP
+00AD   0000           00465                 NOP
+00AE   0000           00466                 NOP
+00AF   0000           00467                 NOP
+00B0   0000           00468                 NOP
+00B1   0000           00469                 NOP
+00B2   0000           00470                 NOP
+00B3   0000           00471                 NOP
+Warning[207]: Found label after column 1. (ATRASO2_HEADER_FOR3)
+00B4                  00472                 ATRASO2_HEADER_FOR3 ; header of for3
+Warning[202]: Argument out of range.  Least significant bits used.
+00B4   3055           00473                         MOVLW   255                     ; Move literal to accumulator
+00B5   00A2           00474                         MOVWF   CONTADOR3       ; Move accumulator value to file
+                      00475                         
+Warning[207]: Found label after column 1. (ATRASO2_BODY_FOR3)
+00B6                  00476                 ATRASO2_BODY_FOR3 ; body of for3
+00B6   0000           00477                         NOP
+00B7   0000           00478                         NOP
+00B8   0000           00479                         NOP
+00B9   0000           00480                         NOP
+00BA   0000           00481                         NOP
+00BB   0000           00482                         NOP
+MPASM  5.35  TRABALHOFINALSEMRECURSIVIDADE.AS   5-24-2019  15:49:23         PAGE 11
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+00BC   0000           00483                         NOP
+00BD   0000           00484                         NOP
+Message[305]: Using default destination of 1 (file).
+00BE   0BA2           00485                         DECFSZ  CONTADOR3       ; Decrement file, skip next line if 0
+00BF   2???           00486                         GOTO    ATRASO2_BODY_FOR3
+                      00487                 
+Message[305]: Using default destination of 1 (file).
+00C0   0BA1           00488                 DECFSZ  CONTADOR2       ; Decrement file, skip next line if 0
+00C1   2???           00489                 GOTO    ATRASO2_BODY_FOR2
+                      00490                 
+Message[305]: Using default destination of 1 (file).
+00C2   0BA0           00491         DECFSZ  CONTADOR1       ; Decrement file, skip next line if 0
+00C3   2???           00492         GOTO    ATRASO2_BODY_FOR1
+                      00493         
+00C4   1E86           00494         BTFSS LED_C ; skip next line if LED_C = 1
+00C5   2???           00495         GOTO LIGAR_LED_C_ATRASO2
+00C6   2???           00496         GOTO DESLIGAR_LED_C_ATRASO2
+00C7                  00497 MYRETURN_ATRASO2
+Warning[203]: Found opcode in column 1. (RETURN)
+00C7   0008           00498 RETURN
+                      00499 
+00C8                  00500 LIGAR_LED_C_ATRASO2
+00C8   1686           00501         BSF LED_C
+00C9   2???           00502         GOTO MYRETURN_ATRASO2
+                      00503 
+00CA                  00504 DESLIGAR_LED_C_ATRASO2
+00CA   1286           00505         BCF LED_C
+00CB   2???           00506         GOTO MYRETURN_ATRASO2
+                      00507 
+00CC                  00508 CICLO_EMERGENCIA
+00CC   1A06           00509         BTFSC LED_A4 ; skip next line if LED_A4 = 0
+00CD   2???           00510         CALL CICLO_EMERGENCIA_A4
+                      00511         
+00CE   1986           00512         BTFSC LED_A3 ; skip next line if LED_A3 = 0
+00CF   2???           00513         CALL CICLO_EMERGENCIA_A3
+                      00514         
+00D0   1906           00515         BTFSC LED_A2 ; skip next line if LED_A2 = 0
+00D1   2???           00516         CALL CICLO_EMERGENCIA_A2
+                      00517         
+00D2   1886           00518         BTFSC LED_A1 ; skip next line if LED_A1 = 0
+00D3   2???           00519         CALL CICLO_EMERGENCIA_A1
+                      00520         
+00D4   1806           00521         BTFSC LED_T ; skip next line if LED_T = 0
+00D5   2???           00522         CALL CICLO_EMERGENCIA_T
+                      00523         
+Warning[203]: Found opcode in column 1. (GOTO)
+00D6   2???           00524 GOTO LOOP_MOVIMENTO_NORMAL
+                      00525 
+00D7                  00526 CICLO_EMERGENCIA_A4
+00D7   2???           00527         CALL DELAY_1SEC_NO_TRIGGER
+00D8   2???           00528         CALL DELAY_1SEC_NO_TRIGGER
+00D9   2???           00529         CALL DESLIGAR_LED_A4
+00DA   2???           00530         CALL LIGAR_LED_A3
+MPASM  5.35  TRABALHOFINALSEMRECURSIVIDADE.AS   5-24-2019  15:49:23         PAGE 12
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+Warning[203]: Found opcode in column 1. (RETURN)
+00DB   0008           00531 RETURN
+                      00532 
+00DC                  00533 CICLO_EMERGENCIA_A3
+00DC   2???           00534         CALL DELAY_1SEC_NO_TRIGGER
+00DD   2???           00535         CALL DELAY_1SEC_NO_TRIGGER
+00DE   2???           00536         CALL DESLIGAR_LED_A3
+00DF   2???           00537         CALL LIGAR_LED_A2
+Warning[203]: Found opcode in column 1. (RETURN)
+00E0   0008           00538 RETURN
+                      00539 
+00E1                  00540 CICLO_EMERGENCIA_A2
+00E1   2???           00541         CALL DELAY_1SEC_NO_TRIGGER
+00E2   2???           00542         CALL DELAY_1SEC_NO_TRIGGER
+00E3   2???           00543         CALL DESLIGAR_LED_A2
+00E4   2???           00544         CALL LIGAR_LED_A1
+Warning[203]: Found opcode in column 1. (RETURN)
+00E5   0008           00545 RETURN
+                      00546 
+00E6                  00547 CICLO_EMERGENCIA_A1
+00E6   2???           00548         CALL DELAY_1SEC_NO_TRIGGER
+00E7   2???           00549         CALL DELAY_1SEC_NO_TRIGGER
+00E8   2???           00550         CALL DESLIGAR_LED_A1
+00E9   2???           00551         CALL LIGAR_LED_T
+Warning[203]: Found opcode in column 1. (RETURN)
+00EA   0008           00552 RETURN
+                      00553 
+00EB                  00554 CICLO_EMERGENCIA_T
+00EB   2???           00555         CALL DELAY_1SEC_NO_TRIGGER
+00EC   2???           00556         CALL DELAY_1SEC_NO_TRIGGER
+00ED   2???           00557         CALL DELAY_1SEC_NO_TRIGGER
+00EE   2???           00558         CALL DELAY_1SEC_NO_TRIGGER
+00EF   2???           00559         CALL DELAY_1SEC_NO_TRIGGER
+00F0   2???           00560         CALL DELAY_1SEC_NO_TRIGGER
+00F1   2???           00561         CALL DELAY_1SEC_NO_TRIGGER
+00F2   2???           00562         CALL DELAY_1SEC_NO_TRIGGER
+00F3   2???           00563         CALL DELAY_1SEC_NO_TRIGGER
+00F4   2???           00564         CALL DELAY_1SEC_NO_TRIGGER
+Warning[203]: Found opcode in column 1. (RETURN)
+00F5   0008           00565 RETURN
+                      00566 
+Warning[205]: Found directive in column 1. (END)
+3F10                  00567 END
+MPASM  5.35  TRABALHOFINALSEMRECURSIVIDADE.AS   5-24-2019  15:49:23         PAGE 13
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+ADEN                              00000003
+ATRASO1_BODY_FOR1                 00000050
+ATRASO1_BODY_FOR2                 00000054
+ATRASO1_BODY_FOR3                 0000005E
+ATRASO1_HEADER_FOR1               0000004E
+ATRASO1_HEADER_FOR2               00000050
+ATRASO1_HEADER_FOR3               0000005C
+ATRASO2_BODY_FOR1                 000000AA
+ATRASO2_BODY_FOR2                 000000AC
+ATRASO2_BODY_FOR3                 000000B6
+ATRASO2_HEADER_FOR1               000000A8
+ATRASO2_HEADER_FOR2               000000AA
+ATRASO2_HEADER_FOR3               000000B4
+BIT_STATUS_MOVIMENTO              STATUS_MOVIMENTO, 0
+BRGH                              00000002
+BTN                               PORTA, 2
+C                                 00000000
+C1INV                             00000004
+C1OUT                             00000006
+C2INV                             00000005
+C2OUT                             00000007
+CCP1CON                           00000017
+CCP1IE                            00000002
+CCP1IF                            00000002
+CCP1M0                            00000000
+CCP1M1                            00000001
+CCP1M2                            00000002
+CCP1M3                            00000003
+CCP1X                             00000005
+CCP1Y                             00000004
+CCPR1H                            00000016
+CCPR1L                            00000015
+CICLO_EMERGENCIA                  000000CC
+CICLO_EMERGENCIA_A1               000000E6
+CICLO_EMERGENCIA_A2               000000E1
+CICLO_EMERGENCIA_A3               000000DC
+CICLO_EMERGENCIA_A4               000000D7
+CICLO_EMERGENCIA_T                000000EB
+CICLO_NORMAL_A1                   00000048
+CICLO_NORMAL_A2                   00000045
+CICLO_NORMAL_A3                   00000042
+CICLO_NORMAL_A4                   0000003F
+CICLO_NORMAL_T                    0000004B
+CIS                               00000003
+CM0                               00000000
+CM1                               00000001
+CM2                               00000002
+CMCON                             0000001F
+CMIE                              00000006
+CMIF                              00000006
+CONTADOR1                         00000020
+CONTADOR2                         00000021
+CONTADOR3                         00000022
+MPASM  5.35  TRABALHOFINALSEMRECURSIVIDADE.AS   5-24-2019  15:49:23         PAGE 14
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+CONTADOR_DE_DELAYS                00000023
+CREN                              00000004
+CSRC                              00000007
+DC                                00000001
+DELAY_1SEC_NO_TRIGGER             000000A8
+DELAY_WITH_TRIGGER                0000004E
+DESLIGAR_LED_A1                   00000084
+DESLIGAR_LED_A2                   00000080
+DESLIGAR_LED_A3                   0000007C
+DESLIGAR_LED_A4                   00000078
+DESLIGAR_LED_C_ATRASO1            00000074
+DESLIGAR_LED_C_ATRASO2            000000CA
+DESLIGAR_LED_T                    00000088
+EEADR                             0000009B
+EECON1                            0000009C
+EECON2                            0000009D
+EEDATA                            0000009A
+EEIE                              00000007
+EEIF                              00000007
+F                                 00000001
+FERR                              00000002
+FSR                               00000004
+GIE                               00000007
+INDF                              00000000
+INICIO                            00000001
+INTCON                            0000000B
+INTE                              00000004
+INTEDG                            00000006
+INTF                              00000001
+IRP                               00000007
+LED_A1                            PORTB, 1
+LED_A2                            PORTB, 2
+LED_A3                            PORTB, 3
+LED_A4                            PORTB, 4
+LED_C                             PORTB, 5
+LED_T                             PORTB, 0
+LIGAR_LED_A1                      00000082
+LIGAR_LED_A1_DESCIDA              000000A2
+LIGAR_LED_A1_SUBIDA               00000093
+LIGAR_LED_A2                      0000007E
+LIGAR_LED_A2_DESCIDA              0000009F
+LIGAR_LED_A2_SUBIDA               00000090
+LIGAR_LED_A3                      0000007A
+LIGAR_LED_A3_DESCIDA              0000009C
+LIGAR_LED_A3_SUBIDA               0000008D
+LIGAR_LED_A4                      00000076
+LIGAR_LED_A4_DESCIDA              00000099
+LIGAR_LED_A4_SUBIDA               0000008A
+LIGAR_LED_C_ATRASO1               00000072
+LIGAR_LED_C_ATRASO2               000000C8
+LIGAR_LED_T                       00000086
+LIGAR_LED_T_DESCIDA               000000A5
+LIGAR_LED_T_SUBIDA                00000096
+MPASM  5.35  TRABALHOFINALSEMRECURSIVIDADE.AS   5-24-2019  15:49:23         PAGE 15
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+LOOP_DESCIDA                      00000028
+LOOP_DESCIDA_LEDS                 00000034
+LOOP_MOVIMENTO_NORMAL             0000000D
+LOOP_SUBIDA                       00000011
+LOOP_SUBIDA_LEDS                  0000001D
+MYRETURN_ATRASO1                  0000006F
+MYRETURN_ATRASO2                  000000C7
+NOT_BO                            00000000
+NOT_BOD                           00000000
+NOT_BOR                           00000000
+NOT_PD                            00000003
+NOT_POR                           00000001
+NOT_RBPU                          00000007
+NOT_T1SYNC                        00000002
+NOT_TO                            00000004
+OERR                              00000001
+OPTION_REG                        00000081
+OSCF                              00000003
+PCL                               00000002
+PCLATH                            0000000A
+PCON                              0000008E
+PEIE                              00000006
+PIE1                              0000008C
+PIR1                              0000000C
+PORTA                             00000005
+PORTB                             00000006
+PR2                               00000092
+PS0                               00000000
+PS1                               00000001
+PS2                               00000002
+PSA                               00000003
+RBIE                              00000003
+RBIF                              00000000
+RCIE                              00000005
+RCIF                              00000005
+RCREG                             0000001A
+RCSTA                             00000018
+RD                                00000000
+RP0                               00000005
+RP1                               00000006
+RX9                               00000006
+RX9D                              00000000
+SPBRG                             00000099
+SPEN                              00000007
+SREN                              00000005
+STATUS                            00000003
+STATUS_MOVIMENTO                  00000024
+SYNC                              00000004
+T0CS                              00000005
+T0IE                              00000005
+T0IF                              00000002
+T0SE                              00000004
+T1CKPS0                           00000004
+MPASM  5.35  TRABALHOFINALSEMRECURSIVIDADE.AS   5-24-2019  15:49:23         PAGE 16
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+T1CKPS1                           00000005
+T1CON                             00000010
+T1OSCEN                           00000003
+T2CKPS0                           00000000
+T2CKPS1                           00000001
+T2CON                             00000012
+TMR0                              00000001
+TMR1CS                            00000001
+TMR1H                             0000000F
+TMR1IE                            00000000
+TMR1IF                            00000000
+TMR1L                             0000000E
+TMR1ON                            00000000
+TMR2                              00000011
+TMR2IE                            00000001
+TMR2IF                            00000001
+TMR2ON                            00000002
+TOUTPS0                           00000003
+TOUTPS1                           00000004
+TOUTPS2                           00000005
+TOUTPS3                           00000006
+TRISA                             00000085
+TRISB                             00000086
+TRMT                              00000001
+TX9                               00000006
+TX9D                              00000000
+TXEN                              00000005
+TXIE                              00000004
+TXIF                              00000004
+TXREG                             00000019
+TXSTA                             00000098
+VR0                               00000000
+VR1                               00000001
+VR2                               00000002
+VR3                               00000003
+VRCON                             0000009F
+VREN                              00000007
+VROE                              00000006
+VRR                               00000005
+W                                 00000000
+WR                                00000001
+WREN                              00000002
+WRERR                             00000003
+Z                                 00000002
+_BODEN_OFF                        00003FBF
+_BODEN_ON                         00003FFF
+_BOREN_OFF                        00003FBF
+_BOREN_ON                         00003FFF
+_CP_OFF                           00003FFF
+_CP_ON                            00001FFF
+_DATA_CP_OFF                      00003FFF
+_DATA_CP_ON                       00003EFF
+_ER_OSC_CLKOUT                    00003FFF
+MPASM  5.35  TRABALHOFINALSEMRECURSIVIDADE.AS   5-24-2019  15:49:23         PAGE 17
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+_ER_OSC_NOCLKOUT                  00003FFE
+_EXTCLK_OSC                       00003FEF
+_HS_OSC                           00003FEE
+_INTOSC_OSC_CLKOUT                00003FFD
+_INTOSC_OSC_NOCLKOUT              00003FFC
+_INTRC_OSC_CLKOUT                 00003FFD
+_INTRC_OSC_NOCLKOUT               00003FFC
+_LP_OSC                           00003FEC
+_LVP_OFF                          00003F7F
+_LVP_ON                           00003FFF
+_MCLRE_OFF                        00003FDF
+_MCLRE_ON                         00003FFF
+_PWRTE_OFF                        00003FFF
+_PWRTE_ON                         00003FF7
+_RC_OSC_CLKOUT                    00003FFF
+_RC_OSC_NOCLKOUT                  00003FFE
+_WDT_OFF                          00003FFB
+_WDT_ON                           00003FFF
+_XT_OSC                           00003FED
+__16F628A                         00000001
+__DEBUG                           1
+
+Errors   :     0
+Warnings :    45 reported,     0 suppressed
+Messages :    10 reported,     0 suppressed
+
+

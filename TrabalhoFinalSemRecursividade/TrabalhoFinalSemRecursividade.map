@@ -1,0 +1,148 @@
+MPLINK 4.35, Linker
+Linker Map File - Created Fri May 24 15:48:48 2019
+
+                                 Section Info
+                  Section       Type    Address   Location Size(Bytes)
+                ---------  ---------  ---------  ---------  ---------
+                   .org_0       code   0x000000    program   0x000000
+                   .org_1       code   0x000000    program   0x0001ee
+.config_2007_TRABALHOFINALSEMRECURSIVIDADE.O       code   0x002007    program   0x000002
+
+
+
+                              Program Memory Usage 
+                               Start         End      
+                           ---------   ---------      
+                            0x000000    0x0000f6      
+                            0x002007    0x002007      
+            248 out of 2183 program addresses used, program memory utilization is 11%
+
+
+
+                              Symbols - Sorted by Name
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+        ATRASO1_BODY_FOR1   0x00006f    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+        ATRASO1_BODY_FOR2   0x000073    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+        ATRASO1_BODY_FOR3   0x00007d    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+      ATRASO1_HEADER_FOR1   0x00006d    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+      ATRASO1_HEADER_FOR2   0x00006f    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+      ATRASO1_HEADER_FOR3   0x00007b    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+        ATRASO2_BODY_FOR1   0x0000ab    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+        ATRASO2_BODY_FOR2   0x0000ad    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+        ATRASO2_BODY_FOR3   0x0000b7    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+      ATRASO2_HEADER_FOR1   0x0000a9    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+      ATRASO2_HEADER_FOR2   0x0000ab    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+      ATRASO2_HEADER_FOR3   0x0000b5    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+         CICLO_EMERGENCIA   0x0000cd    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+      CICLO_EMERGENCIA_A1   0x0000e7    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+      CICLO_EMERGENCIA_A2   0x0000e2    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+      CICLO_EMERGENCIA_A3   0x0000dd    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+      CICLO_EMERGENCIA_A4   0x0000d8    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+       CICLO_EMERGENCIA_T   0x0000ec    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+          CICLO_NORMAL_A1   0x000067    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+          CICLO_NORMAL_A2   0x000064    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+          CICLO_NORMAL_A3   0x000061    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+          CICLO_NORMAL_A4   0x00005e    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+           CICLO_NORMAL_T   0x00006a    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+    DELAY_1SEC_NO_TRIGGER   0x0000a9    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+       DELAY_WITH_TRIGGER   0x00006d    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+          DESLIGAR_LED_A1   0x0000a3    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+          DESLIGAR_LED_A2   0x00009f    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+          DESLIGAR_LED_A3   0x00009b    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+          DESLIGAR_LED_A4   0x000097    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+   DESLIGAR_LED_C_ATRASO1   0x000093    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+   DESLIGAR_LED_C_ATRASO2   0x0000cb    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+           DESLIGAR_LED_T   0x0000a7    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+                   INICIO   0x000001    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+             LIGAR_LED_A1   0x0000a1    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+     LIGAR_LED_A1_DESCIDA   0x000058    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+      LIGAR_LED_A1_SUBIDA   0x000035    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+             LIGAR_LED_A2   0x00009d    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+     LIGAR_LED_A2_DESCIDA   0x000055    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+      LIGAR_LED_A2_SUBIDA   0x000032    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+             LIGAR_LED_A3   0x000099    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+     LIGAR_LED_A3_DESCIDA   0x000052    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+      LIGAR_LED_A3_SUBIDA   0x00002f    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+             LIGAR_LED_A4   0x000095    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+     LIGAR_LED_A4_DESCIDA   0x000050    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+      LIGAR_LED_A4_SUBIDA   0x00002c    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+      LIGAR_LED_C_ATRASO1   0x000091    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+      LIGAR_LED_C_ATRASO2   0x0000c9    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+              LIGAR_LED_T   0x0000a5    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+      LIGAR_LED_T_DESCIDA   0x00005b    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+       LIGAR_LED_T_SUBIDA   0x000038    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+             LOOP_DESCIDA   0x00003a    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+        LOOP_DESCIDA_LEDS   0x000045    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+    LOOP_MOVIMENTO_NORMAL   0x00000e    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+LOOP_MOVIMENTO_NORMAL_LEDS   0x000011    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+              LOOP_SUBIDA   0x000016    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+         LOOP_SUBIDA_LEDS   0x000021    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+         MYRETURN_ATRASO1   0x00008e    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+         MYRETURN_ATRASO2   0x0000c8    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+
+
+
+                              Symbols - Sorted by Address
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+                   INICIO   0x000001    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+    LOOP_MOVIMENTO_NORMAL   0x00000e    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+LOOP_MOVIMENTO_NORMAL_LEDS   0x000011    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+              LOOP_SUBIDA   0x000016    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+         LOOP_SUBIDA_LEDS   0x000021    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+      LIGAR_LED_A4_SUBIDA   0x00002c    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+      LIGAR_LED_A3_SUBIDA   0x00002f    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+      LIGAR_LED_A2_SUBIDA   0x000032    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+      LIGAR_LED_A1_SUBIDA   0x000035    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+       LIGAR_LED_T_SUBIDA   0x000038    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+             LOOP_DESCIDA   0x00003a    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+        LOOP_DESCIDA_LEDS   0x000045    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+     LIGAR_LED_A4_DESCIDA   0x000050    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+     LIGAR_LED_A3_DESCIDA   0x000052    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+     LIGAR_LED_A2_DESCIDA   0x000055    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+     LIGAR_LED_A1_DESCIDA   0x000058    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+      LIGAR_LED_T_DESCIDA   0x00005b    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+          CICLO_NORMAL_A4   0x00005e    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+          CICLO_NORMAL_A3   0x000061    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+          CICLO_NORMAL_A2   0x000064    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+          CICLO_NORMAL_A1   0x000067    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+           CICLO_NORMAL_T   0x00006a    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+       DELAY_WITH_TRIGGER   0x00006d    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+      ATRASO1_HEADER_FOR1   0x00006d    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+      ATRASO1_HEADER_FOR2   0x00006f    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+        ATRASO1_BODY_FOR1   0x00006f    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+        ATRASO1_BODY_FOR2   0x000073    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+      ATRASO1_HEADER_FOR3   0x00007b    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+        ATRASO1_BODY_FOR3   0x00007d    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+         MYRETURN_ATRASO1   0x00008e    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+      LIGAR_LED_C_ATRASO1   0x000091    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+   DESLIGAR_LED_C_ATRASO1   0x000093    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+             LIGAR_LED_A4   0x000095    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+          DESLIGAR_LED_A4   0x000097    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+             LIGAR_LED_A3   0x000099    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+          DESLIGAR_LED_A3   0x00009b    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+             LIGAR_LED_A2   0x00009d    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+          DESLIGAR_LED_A2   0x00009f    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+             LIGAR_LED_A1   0x0000a1    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+          DESLIGAR_LED_A1   0x0000a3    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+              LIGAR_LED_T   0x0000a5    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+           DESLIGAR_LED_T   0x0000a7    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+    DELAY_1SEC_NO_TRIGGER   0x0000a9    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+      ATRASO2_HEADER_FOR1   0x0000a9    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+        ATRASO2_BODY_FOR1   0x0000ab    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+      ATRASO2_HEADER_FOR2   0x0000ab    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+        ATRASO2_BODY_FOR2   0x0000ad    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+      ATRASO2_HEADER_FOR3   0x0000b5    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+        ATRASO2_BODY_FOR3   0x0000b7    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+         MYRETURN_ATRASO2   0x0000c8    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+      LIGAR_LED_C_ATRASO2   0x0000c9    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+   DESLIGAR_LED_C_ATRASO2   0x0000cb    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+         CICLO_EMERGENCIA   0x0000cd    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+      CICLO_EMERGENCIA_A4   0x0000d8    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+      CICLO_EMERGENCIA_A3   0x0000dd    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+      CICLO_EMERGENCIA_A2   0x0000e2    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+      CICLO_EMERGENCIA_A1   0x0000e7    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+       CICLO_EMERGENCIA_T   0x0000ec    program     static C:\Users\1137910\Downloads\ComputerScience\Laboratório de Arquitetura de Computadores\TrabalhoFinalSemRecursividade\TrabalhoFinalSemRecursividade.asm
+
+
