@@ -1,0 +1,239 @@
+1. O que é um arquivo fonte?
+A. um arquivo de texto que contém instruções de linguagem de
+programação.
+B. um subdiretório que contém os programas.
+C. um arquivo que contém dados para um programa.
+D. um documento que contém os requisitos para um projeto.
+
+Resposta: A)
+
+2. O que é um registrador?
+A. parte do sistema de computador que mantém o controle dos
+parâmetros do sistema.
+B. uma parte do processador que possui um padrão de bits.
+C. parte do processador que contém o seu número de série único.
+D. parte do bus de sistema que contém dados.
+
+Resposta: B)
+
+3. Qual o caracter que, na linguagem assembly do SPIM, inicia um
+comentário?
+A. #
+B. $
+C. / /
+D. *
+
+Resposta: A)
+
+4. Quantos bits há em cada instrução de máquina MIPS?
+A. 8
+B. 16
+C. 32
+D. instruções diferentes possuem diferentes comprimentos.
+
+Resposta: C)
+
+5. Quando você abre um arquivo de origem a partir do menu Arquivo do
+SPIM, quais as duas coisas que acontecem?
+A. O arquivo está carregado na memória e começa a execução.
+B. SPIM é iniciado e o arquivo é aberto no editor.
+C. O arquivo é montado em instruções de máquina, e as instruções de
+máquina são carregados na memória do SPIM.
+D. O programa é executado e os resultados são salvos em disco.
+
+Resposta: B)
+
+6. O que é o contador de programa?
+A. um registrador que mantém a conta do número de erros durante a
+execução de um programa.
+B. uma parte do processador que contém o endereço da primeira
+palavra de dados.
+C. uma variável na montadora que os números das linhas do arquivo
+de origem. 
+D. parte do processador que contém o endereço da próxima instrução
+de máquina para ser obtida.
+
+
+7. Ao pressionar a tecla F10 para executar uma instrução, quanto será
+adicionado ao contador de programa?
+A. 1
+B. 2
+C. 4
+D. 8
+
+
+8. O que é uma diretiva, tal como a diretiva .text?
+A. uma instrução em linguagem assembly que resulta em uma
+instrução em linguagem de máquina.
+B. uma das opções de menu do sistema SPIM.
+C. uma instrução em linguagem de máquina que faz com que uma
+operação sobre os dados ocorra.
+D. uma declaração que diz o montador algo sobre o que o
+programador quer, mas não corresponde diretamente a uma instrução
+de máquina.
+
+
+9. O que é um endereço simbólico?
+A. um local de memória que contém dados simbólicos.
+B. um byte na memória que contém o endereço de dados.
+C. símbolo dado como argumento para uma directiva.
+D. um nome usado no código-fonte em linguagem assembly para um
+local na memória.
+
+
+10.Em qual endereço o simulador SPIM coloca a primeira instrução de
+máquina quando ele está sendo executado com a opção Bare Machine
+ligada?
+A. 0x00000000
+B. 0x00400000
+C. 0x10000000
+D. 0xFFFFFFFF
+
+
+11. Algumas instruções de máquina possuem uma constante como um
+dos operandos. Como é chamado tal operando?
+A. operando imediato
+B. operando embutido
+C. operando binário
+D. operando de máquina
+
+
+12. Como é chamada uma operação lógica executada entre bits de cada
+coluna dos operandos para produzir um bit de resultado para cada
+coluna?
+A. operação lógica
+B. operação bitwise
+C. operação binária
+D. operação coluna 
+
+
+13. Quando uma operação é de fato executada, como estão os operandos
+na ALU?
+A. Pelo menos um operando deve ser de 32 bit.
+B. Cada operando pode ser de qualquer tamanho.
+C. Ambos operandos devem que vir de registradores.
+D. Cada um dos registradores deve possuir 32 bit.
+
+
+14. Dezesseis bits de dados de uma instrução de ori são usados como um
+operando imediato. Durante execução, o que deve ser feito primeiro?
+A. Os dados são estendidos em zero à direita por 16 bits.
+B. Os dados são estendidos em zero à esquerda por 16 bits.
+C. Nada precisa ser feito.
+D. Apenas 16 bits são usados pelo outro operando.
+
+
+15. Qual o nome para um padrão de bits copiados em um registrador?
+A. load.
+B. filled.
+C. stuffed.
+D. fixed.
+
+
+16. Qual das instruções seguintes armazenam no registrador $5 um
+padrão de bits que representa positivo 48?
+A. ori $5,$0,0x48
+B. ori $5,$5,0x48
+C. ori $5,$0,48
+D. ori $0,$5,0x48
+
+
+17. A instrução de ori pode armazenar o complemento de dois de um
+número em um registrador?
+A. Não.
+B. Sim.
+
+
+18. Qual das instruções seguintes limpa todos os bits no registrador $8
+com exceção do byte de baixa ordem que fica inalterado?
+A. ori $8,$8,0xFF
+B. ori $8,$0,0x00FF
+C. xori $8,$8,0xFF
+D. andi $8,$8,0xFF
+
+
+19. Qual é o resultado de um ou exclusivo de padrão sobre ele mesmo?
+A. Todos os bits em zero.
+B. Todos os bits em um.
+C. O padrão original utilizado.
+D. O resultado é o contrário do original.
+
+
+20. Todas as instruções de máquina têm os mesmos campos?
+A. Não. Diferentes de instruções de máquina possuem campos diferentes.
+B. Não. Cada instrução de máquina é completamente diferente de
+qualquer outra. 
+C. Sim. Todas as instruções de máquina têm os mesmos campos na
+mesma ordem.
+D. Sim. Todas as instruções de máquina têm os mesmos campos, mas
+eles podem estar em ordens diferentes.
+
+---------------------------
+
+Implementar os seguintes programas (usando apenas as instruções indicadas)
+
+//programa 1 (add, addi, sub, lógicas)
+{
+	a =2;
+	b =3;
+	c =4;
+	d =5;
+	x = (a+b) - (c+d);
+	y = a – b + x;
+	b = x – y;
+}
+
+//programa 2 (add, addi, sub, lógicas)
+{
+	x = 1;
+	y = 5*x + 15;
+}
+
+// programa 3 (add, addi, sub, lógicas)
+{
+	x = 3;
+	y = 4 ;
+	z = ( 15*x + 67*y)*4
+}
+
+Implementar os seguintes programas (pode-se usar sll,
+srl e sra)
+// programa 4
+{
+	x = 3;
+	y = 4 ;
+	z = ( 15*x + 67*y)*4
+}
+
+// programa 5
+{
+	x = 100000;
+	y = 200000;
+	z = x + y;
+}
+
+// programa 6
+{
+	x = o maior inteiro possível;
+	y = 300000;
+	z = x - 4y
+}
+
+// programa 7
+Considere a seguinte instrução iniciando um programa:
+ori $8, $0, 0x01
+Usando apenas instruções reg-reg lógicas e instruções de deslocamento (sll,
+srl e sra), continuar o programa de forma que ao final, tenhamos o seguinte
+conteúdo no registrador $8:
+$8 = 0xFFFFFFFF
+
+// programa 8
+Inicialmente escreva um programa que faça:
+$8 = 0x12345678.
+A partir do registrador $8 acima, usando apenas instruções lógicas (or, ori,
+and, andi, xor, xori) e instruções de deslocamento (sll, srl e sra), você
+deverá obter os seguintes valores nos respectivos registradores:
+$9 = 0x12
+$10 = 0x34
+$11 = 0x56
+$12 = 0x78
